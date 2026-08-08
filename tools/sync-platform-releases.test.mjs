@@ -8,6 +8,8 @@ import {
     obsoleteManagedTags,
     platformReleaseTag,
     releaseTargetFromManifest,
+    releaseTargetsForMode,
+    releaseUploadArguments,
 } from "./sync-platform-releases.mjs"
 
 test("builds a namespaced tag while keeping the release version numeric", () => {
@@ -20,6 +22,7 @@ test("parses immutable manifest entries into platform release targets", () => {
     feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/${revision}/owen-mdbox/mac-arm/0.3.35`,
     version: "0.3.35",
   }), {
+    assetNames: [],
     feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/${revision}/owen-mdbox/mac-arm/0.3.35`,
     metadataRevision: revision,
     platform: "mac-arm",
@@ -74,5 +77,37 @@ test("collects the latest release target for every manifest platform", async () 
   assert.deepEqual(targets.map((target) => target.tag), [
     "owen-mdbox-mac-arm-0.3.35",
     "owen-mdbox-windows-x64-0.3.37",
+  ])
+})
+
+test("maps a Windows download URL to its central release ZIP asset", () => {
+  const revision = "a".repeat(40)
+  const version = "0.3.44"
+  assert.deepEqual(releaseTargetFromManifest("owen-mdbox", "windows-x64", {
+    downloadUrl: `https://github.com/towishy/Owen-Updates/releases/download/owen-mdbox-windows-x64-${version}/owen-mdbox-${version}-windows-x64-setup.zip`,
+    feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/${revision}/owen-mdbox/windows-x64/${version}`,
+    version,
+  }).assetNames, [`owen-mdbox-${version}-windows-x64-setup.zip`])
+})
+
+test("prepares only download targets and uploads their ZIP with clobber", () => {
+  const archiveName = "owen-mdbox-0.3.44-windows-x64-setup.zip"
+  const windowsTarget = {
+    assetNames: [archiveName],
+    platform: "windows-x64",
+    product: "owen-mdbox",
+    tag: "owen-mdbox-windows-x64-0.3.44",
+    version: "0.3.44",
+  }
+  const macTarget = { assetNames: [], platform: "mac-arm", product: "owen-mdbox", tag: "owen-mdbox-mac-arm-0.3.43", version: "0.3.43" }
+  assert.deepEqual(releaseTargetsForMode([windowsTarget, macTarget], true), [windowsTarget])
+  assert.deepEqual(releaseUploadArguments(windowsTarget, "C:/updates", "towishy/Owen-Updates"), [
+    "release",
+    "upload",
+    windowsTarget.tag,
+    join("C:/updates", "owen-mdbox", "windows-x64", "0.3.44", archiveName),
+    "--repo",
+    "towishy/Owen-Updates",
+    "--clobber",
   ])
 })

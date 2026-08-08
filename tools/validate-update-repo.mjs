@@ -16,7 +16,7 @@ const products = {
   "owen-mdbox": {
     platforms: {
       "mac-arm": { kind: "electron", metadata: "latest-mac.yml", required: () => [] },
-      "windows-x64": { kind: "electron", metadata: "latest.yml", required: () => [] },
+      "windows-x64": { download: (version) => `owen-mdbox-${version}-windows-x64-setup.zip`, kind: "electron", metadata: "latest.yml", required: () => [] },
     },
   },
 }
@@ -37,7 +37,7 @@ console.log(`Validated ${validatedProducts} product update feed(s).`)
 async function validateProduct(product, config) {
   const productRoot = join(repositoryRoot, product)
   const manifest = JSON.parse(await readFile(join(productRoot, "update.json"), "utf8"))
-  assert(manifest.schemaVersion === 1, `${product}: unsupported schemaVersion`)
+  assert(manifest.schemaVersion === 1 || manifest.schemaVersion === 2, `${product}: unsupported schemaVersion`)
   assert(manifest.product === product, `${product}: product name mismatch`)
   assert(isRecord(manifest.platforms), `${product}: platforms must be an object`)
 
@@ -48,11 +48,19 @@ async function validateProduct(product, config) {
     assert(isRecord(update), `${product}/${platform}: update entry must be an object`)
     assert(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(update.version), `${product}/${platform}: invalid version`)
 
+    const platformConfig = config.platforms[platform]
+    if (manifest.schemaVersion === 2 && platformConfig.download) {
+      const downloadName = platformConfig.download(update.version)
+      const expectedDownloadUrl = `https://github.com/towishy/Owen-Updates/releases/download/${product}-${platform}-${update.version}/${downloadName}`
+      assert(update.downloadUrl === expectedDownloadUrl, `${product}/${platform}: downloadUrl must target the platform ZIP release asset`)
+      await stat(join(productRoot, platform, update.version, downloadName))
+    }
+
     const feedUrl = new URL(update.feedUrl)
     const expectedPath = new RegExp(`^/towishy/Owen-Updates/[a-f0-9]{40}/${product}/${platform}/${update.version}$`, "u")
     assert(feedUrl.protocol === "https:" && feedUrl.hostname === "raw.githubusercontent.com" && expectedPath.test(feedUrl.pathname), `${product}/${platform}: feedUrl must pin a commit containing its version folder`)
     await validatePlatformRetention(productRoot, product, platform, update.version)
-    await validateVersionFeed(product, productRoot, platform, update.version, config.platforms[platform])
+    await validateVersionFeed(product, productRoot, platform, update.version, platformConfig)
   }
 }
 

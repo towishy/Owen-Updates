@@ -22,12 +22,23 @@ export function releaseTargetFromManifest(product, platform, entry) {
   const match = /^\/towishy\/Owen-Updates\/([a-f0-9]{40})\/([^/]+)\/([^/]+)\/([^/]+)$/u.exec(url.pathname)
   assert(url.protocol === "https:" && url.hostname === "raw.githubusercontent.com" && match, `${product}/${platform} feedUrl is not immutable`)
   assert(match[2] === product && match[3] === platform && match[4] === entry.version, `${product}/${platform} feedUrl does not match its manifest entry`)
+  const tag = platformReleaseTag(product, platform, entry.version)
+  const assetNames = []
+  if (entry.downloadUrl !== undefined) {
+    assert(typeof entry.downloadUrl === "string", `${product}/${platform} downloadUrl is invalid`)
+    const downloadUrl = new URL(entry.downloadUrl)
+    const downloadMatch = /^\/towishy\/Owen-Updates\/releases\/download\/([^/]+)\/([^/]+)$/u.exec(downloadUrl.pathname)
+    assert(downloadUrl.protocol === "https:" && downloadUrl.hostname === "github.com" && downloadMatch, `${product}/${platform} downloadUrl is invalid`)
+    assert(downloadMatch[1] === tag, `${product}/${platform} downloadUrl tag does not match its manifest entry`)
+    assetNames.push(downloadMatch[2])
+  }
   return {
+    assetNames,
     feedUrl: entry.feedUrl,
     metadataRevision: match[1],
     platform,
     product,
-    tag: platformReleaseTag(product, platform, entry.version),
+    tag,
     version: entry.version,
   }
 }
@@ -39,6 +50,15 @@ export function obsoleteManagedTags(tags, targets) {
     if (versionPattern.test(tag)) return true
     return prefixes.some((prefix) => tag.startsWith(prefix)) && !desired.has(tag)
   }).sort()
+}
+
+export function releaseTargetsForMode(targets, prepareDownloads) {
+  return prepareDownloads ? targets.filter((target) => target.assetNames.length > 0) : targets
+}
+
+export function releaseUploadArguments(target, root = repositoryRoot, repository = githubRepository) {
+  const assetPaths = target.assetNames.map((assetName) => join(root, target.product, target.platform, target.version, assetName))
+  return ["release", "upload", target.tag, ...assetPaths, "--repo", repository, "--clobber"]
 }
 
 export async function collectReleaseTargets(root = repositoryRoot) {
@@ -62,18 +82,25 @@ export async function collectReleaseTargets(root = repositoryRoot) {
 }
 
 async function main() {
+  const prepareDownloads = process.argv.includes("--prepare-downloads")
   assert(run("git", ["branch", "--show-current"], { capture: true }) === "main", "platform releases must be synchronized from main")
   assert(run("git", ["status", "--porcelain"], { capture: true }) === "", "repository must be clean before synchronizing platform releases")
-  assert(run("git", ["rev-parse", "HEAD"], { capture: true }) === run("git", ["rev-parse", "origin/main"], { capture: true }), "main must be pushed before synchronizing platform releases")
+  if (prepareDownloads) {
+    assert(runStatus("git", ["merge-base", "--is-ancestor", "origin/main", "HEAD"]) === 0, "local main must descend from origin/main before preparing downloads")
+  } else {
+    assert(run("git", ["rev-parse", "HEAD"], { capture: true }) === run("git", ["rev-parse", "origin/main"], { capture: true }), "main must be pushed before synchronizing platform releases")
+  }
   run("gh", ["auth", "status"])
 
-  const targets = await collectReleaseTargets()
+  const allTargets = await collectReleaseTargets()
+  const targets = releaseTargetsForMode(allTargets, prepareDownloads)
   assert(targets.length > 0, "no platform release targets were found")
   for (const target of targets) {
     const manifestPath = `${target.product}/update.json`
     const pinRevision = run("git", ["log", "-1", "--format=%H", "-S", target.feedUrl, "--", manifestPath], { capture: true })
     assert(/^[a-f0-9]{40}$/u.test(pinRevision), `could not resolve the manifest pin commit for ${target.tag}`)
-    assert(runStatus("git", ["merge-base", "--is-ancestor", target.metadataRevision, "origin/main"]) === 0, `${target.tag} metadata revision is not on origin/main`)
+    const metadataAncestor = prepareDownloads ? "HEAD" : "origin/main"
+    assert(runStatus("git", ["merge-base", "--is-ancestor", target.metadataRevision, metadataAncestor]) === 0, `${target.tag} metadata revision is not on ${metadataAncestor}`)
     await ensureTag(target.tag, pinRevision)
   }
 
@@ -87,6 +114,16 @@ async function main() {
       "--notes", `${target.product} ${target.platform} ${target.version} update feed.`,
       "--verify-tag",
     ])
+  }
+
+  for (const target of targets) {
+    if (target.assetNames.length === 0) continue
+    run("gh", releaseUploadArguments(target))
+  }
+
+  if (prepareDownloads) {
+    console.log(`Prepared ${targets.length} platform download release(s) before manifest publication.`)
+    return
   }
 
   releaseTags = listReleaseTags()
@@ -111,7 +148,7 @@ async function main() {
   }
   assert(!finalReleases.some((tag) => versionPattern.test(tag)), "legacy numeric releases remain")
   assert(!finalRemoteTags.some((tag) => versionPattern.test(tag)), "legacy numeric tags remain")
-  console.log(`Synchronized ${targets.length} platform releases; retained one latest release per product and platform.`)
+  console.log(`Synchronized ${allTargets.length} platform releases; retained one latest release per product and platform.`)
 }
 
 async function ensureTag(tag, revision) {

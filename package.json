@@ -15,6 +15,7 @@
     "publish:gsa:windows": "node tools/publish-gsa-windows.mjs",
     "publish:mdbox:mac": "node tools/publish-mdbox-mac.mjs",
     "publish:mdbox:windows": "node tools/publish-mdbox-windows.mjs",
+    "release:prepare-downloads": "node tools/sync-platform-releases.mjs --prepare-downloads",
     "release:sync-platforms": "node tools/sync-platform-releases.mjs",
     "test": "node --test tools/*.test.mjs",
     "validate": "node tools/validate-update-repo.mjs"

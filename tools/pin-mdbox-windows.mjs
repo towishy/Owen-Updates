@@ -6,12 +6,14 @@ const options = parseArguments(process.argv.slice(2))
 assert(/^\d+\.\d+\.\d+$/u.test(options.version), "--version must use x.y.z format")
 assert(/^[a-f0-9]{40}$/u.test(options.revision), "--revision must be a full lowercase Git commit SHA")
 
-const repositoryRoot = resolve(import.meta.dirname, "..")
+const repositoryRoot = resolve(process.env.OWEN_UPDATES_ROOT ?? resolve(import.meta.dirname, ".."))
 const platformRoot = resolve(repositoryRoot, "owen-mdbox", "windows-x64")
 const manifestPath = resolve(repositoryRoot, "owen-mdbox", "update.json")
 await assertVersionExists(platformRoot, options.version)
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"))
+manifest.schemaVersion = 2
 manifest.platforms["windows-x64"] = {
+  downloadUrl: `https://github.com/towishy/Owen-Updates/releases/download/owen-mdbox-windows-x64-${options.version}/owen-mdbox-${options.version}-windows-x64-setup.zip`,
   version: options.version,
   feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/${options.revision}/owen-mdbox/windows-x64/${options.version}`,
 }

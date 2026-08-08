@@ -6,7 +6,8 @@ const options = parseArguments(process.argv.slice(2))
 assert(/^\d+\.\d+\.\d+$/u.test(options.version), "--version must use x.y.z format")
 assert(/^[a-f0-9]{40}$/u.test(options.revision), "--revision must be a full lowercase Git commit SHA")
 
-const metadataPath = resolve(import.meta.dirname, "..", "owen-mdbox", "windows-x64", options.version, "latest.yml")
+const repositoryRoot = resolve(process.env.OWEN_UPDATES_ROOT ?? resolve(import.meta.dirname, ".."))
+const metadataPath = resolve(repositoryRoot, "owen-mdbox", "windows-x64", options.version, "latest.yml")
 const metadata = parseYaml(await readFile(metadataPath, "utf8"))
 assert(String(metadata.version) === options.version, "latest.yml version does not match --version")
 metadata.files = metadata.files.map((file) => {

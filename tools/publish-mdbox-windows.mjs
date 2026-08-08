@@ -7,7 +7,7 @@ const options = parseArguments(process.argv.slice(2))
 assert(/^\d+\.\d+\.\d+$/u.test(options.version), "--version must use x.y.z format")
 assert(options.source, "--source is required")
 
-const repositoryRoot = resolve(import.meta.dirname, "..")
+const repositoryRoot = resolve(process.env.OWEN_UPDATES_ROOT ?? resolve(import.meta.dirname, ".."))
 const productRoot = join(repositoryRoot, "owen-mdbox")
 const sourceRoot = resolve(options.source)
 const platformRoot = join(productRoot, "windows-x64")
@@ -16,6 +16,7 @@ const metadataName = "latest.yml"
 const metadataSource = join(sourceRoot, metadataName)
 const metadata = parseYaml(await readFile(metadataSource, "utf8"))
 const setupName = `owen-mdbox-${options.version}-windows-x64-setup.exe`
+const archiveName = `owen-mdbox-${options.version}-windows-x64-setup.zip`
 const blockmapName = `${setupName}.blockmap`
 
 assert(String(metadata.version) === options.version, "latest.yml version does not match --version")
@@ -24,6 +25,7 @@ assert(metadata.files?.some((file) => file.url === setupName), "latest.yml does 
 
 await mkdir(versionRoot, { recursive: true })
 await copyImmutable(join(sourceRoot, setupName), join(versionRoot, setupName))
+await copyImmutable(join(sourceRoot, archiveName), join(versionRoot, archiveName))
 await copyImmutable(join(sourceRoot, blockmapName), join(versionRoot, blockmapName))
 const publishedMetadata = structuredClone(metadata)
 publishedMetadata.files = publishedMetadata.files.map((file) => ({
@@ -33,7 +35,7 @@ publishedMetadata.files = publishedMetadata.files.map((file) => ({
 await writeImmutableMetadata(publishedMetadata, join(versionRoot, metadataName))
 
 const checksumLines = []
-for (const fileName of [setupName, blockmapName]) {
+for (const fileName of [setupName, archiveName, blockmapName]) {
   checksumLines.push(`${await digest(join(versionRoot, fileName), "sha256", "hex")}  ${fileName}`)
 }
 await writeFile(join(versionRoot, "SHA256SUMS.txt"), `${checksumLines.join("\n")}\n`, "utf8")

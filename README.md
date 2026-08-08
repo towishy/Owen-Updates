@@ -1,6 +1,6 @@
 # Owen Updates
 
-Owen 제품군의 공개 업데이트 메타데이터와 in-place upgrade 바이너리를 제공한다.
+Owen 제품군의 공개 업데이트 메타데이터와 설치 바이너리를 제공한다.
 
 ## 구조
 
@@ -11,6 +11,7 @@ Owen 제품군의 공개 업데이트 메타데이터와 in-place upgrade 바이
     <version>/
       latest.yml | latest-mac.yml
       installer
+      setup archive
       blockmap
       SHA256SUMS.txt
 ```
@@ -20,6 +21,7 @@ Owen 제품군의 공개 업데이트 메타데이터와 in-place upgrade 바이
 - 플랫폼 이름은 Windows x64의 `windows-x64`, Apple Silicon macOS의 `mac-arm`을 사용한다.
 - 바이너리는 플랫폼 아래의 변경 불가능한 버전 폴더에 보관한다.
 - 대용량 설치 바이너리는 Git LFS로 추적한다.
+- Owen MDBOX Windows manifest schema v2는 중앙 플랫폼 Release의 setup ZIP URL을 포함한다. 동기화 명령은 해당 ZIP을 Release 자산으로 업로드한다.
 
 현재 등록 제품: [owen-mdbox](owen-mdbox/README.md)
 
@@ -53,6 +55,14 @@ npm run release:sync-platforms
 ```
 
 이 명령은 모든 제품의 `update.json`을 읽고 manifest에 pin된 feed가 처음 게시된 commit에 플랫폼 태그를 만든다. 실행 전 `main`이 clean하고 `origin/main`과 동기화되어 있어야 한다.
+
+다운로드 자산 URL이 있는 manifest는 공개 전에 다음 준비 단계를 먼저 실행한다. 이 단계는 로컬 manifest commit에 태그를 만들고 ZIP 자산을 중앙 Release에 업로드하지만 이전 Release를 제거하지 않는다. 준비가 성공한 뒤 `main`을 push하고 전체 동기화를 실행한다.
+
+```text
+npm run release:prepare-downloads
+git push origin main
+npm run release:sync-platforms
+```
 
 Owen MDBOX macOS arm64 피드는 제품 저장소의 서명 릴리스 명령이 다음 스크립트를 artifact, metadata, manifest 커밋 사이에서 각각 호출한다.
 
