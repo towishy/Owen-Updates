@@ -22,3 +22,5 @@ Owen 제품군의 공개 업데이트 메타데이터와 in-place upgrade 바이
 - 대용량 설치 바이너리는 Git LFS로 추적한다.
 
 현재 등록 제품: [owen-mdbox](owen-mdbox/README.md)
+
+다른 Owen 제품을 연결할 때는 [제품 통합 프롬프트 가이드](PRODUCT-INTEGRATION-PROMPT.md)를 사용한다.

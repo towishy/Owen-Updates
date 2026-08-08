@@ -1,1 +1,5 @@
 node_modules/
+정보/
+설정정보.txt
+*.log
+.DS_Store
