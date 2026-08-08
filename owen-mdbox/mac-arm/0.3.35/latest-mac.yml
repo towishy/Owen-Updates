@@ -1,9 +1,9 @@
 version: 0.3.35
 files:
-  - url: owen-mdbox-0.3.35-macos-arm64.zip
+  - url: https://media.githubusercontent.com/media/towishy/Owen-Updates/8b8f1eebd3ae60a09ac2e5c2b559f351347bb979/owen-mdbox/mac-arm/0.3.35/owen-mdbox-0.3.35-macos-arm64.zip
     sha512: ho4sY4pgd3JGwukC/ygrs8Hm8Wmdart/9SOwfdaWyMiRWsqE66xLha9tLpnmotvE69lZepIVo+ueohYR/0RwbA==
     size: 209176492
-  - url: owen-mdbox-0.3.35-macos-arm64.dmg
+  - url: https://media.githubusercontent.com/media/towishy/Owen-Updates/8b8f1eebd3ae60a09ac2e5c2b559f351347bb979/owen-mdbox/mac-arm/0.3.35/owen-mdbox-0.3.35-macos-arm64.dmg
     sha512: T/WgmaPy1aKsQabC3Jg5mcltDGd7ckoPqriu+fsEJDTWaonS3D7+D5eowayTmPVKHLpL4zNGvwTxCk6ZYxoQ0Q==
     size: 211447543
 path: owen-mdbox-0.3.35-macos-arm64.zip
