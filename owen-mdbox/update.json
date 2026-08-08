@@ -7,8 +7,8 @@
       "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/bfe456256ae293acff459e73444ed93ab9cc63b9/owen-mdbox/windows-x64/0.3.40"
     },
     "mac-arm": {
-      "version": "0.3.38",
-      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/6c279bca12d9710f9f4b697af4add016cd08a822/owen-mdbox/mac-arm/0.3.38"
+      "version": "0.3.39",
+      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/768718ebc7e2ddafd968ab38871d8e094ef8d849/owen-mdbox/mac-arm/0.3.39"
     }
   }
 }

@@ -1,0 +1,11 @@
+version: 0.3.39
+files:
+  - url: https://media.githubusercontent.com/media/towishy/Owen-Updates/eb618d6ffe5d51b945303d17969ded3151895921/owen-mdbox/mac-arm/0.3.39/owen-mdbox-0.3.39-macos-arm64.zip
+    sha512: 0Y6pZrifwD30sLIV1lRA+gKIqt3hHi5jC+3FAjGqXTCqCfTvhkJ9tw6Dvip3HE7nv+x0U0fn3MzBCNb/wnnN/A==
+    size: 209183403
+  - url: https://media.githubusercontent.com/media/towishy/Owen-Updates/eb618d6ffe5d51b945303d17969ded3151895921/owen-mdbox/mac-arm/0.3.39/owen-mdbox-0.3.39-macos-arm64.dmg
+    sha512: sdF3Ja92Fx0oxjVcsU9s6MI07G6uYd3V2RlFswVX+wfu+ePufcgmJnCSaQbua3aJyRiDtoBnq0W86xtNeFPuZQ==
+    size: 211454504
+path: owen-mdbox-0.3.39-macos-arm64.zip
+sha512: 0Y6pZrifwD30sLIV1lRA+gKIqt3hHi5jC+3FAjGqXTCqCfTvhkJ9tw6Dvip3HE7nv+x0U0fn3MzBCNb/wnnN/A==
+releaseDate: 2026-08-08T09:19:59.499Z
