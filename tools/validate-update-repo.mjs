@@ -4,7 +4,7 @@ import { basename, dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { parse as parseYaml } from "yaml"
 
-const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..")
+const repositoryRoot = resolve(process.env.OWEN_UPDATES_ROOT ?? resolve(dirname(fileURLToPath(import.meta.url)), ".."))
 const products = ["owen-mdbox"]
 const platformMetadata = {
   "mac-arm": "latest-mac.yml",
@@ -68,7 +68,10 @@ async function validateVersionFeed(product, productRoot, platform, version) {
     assert(match, `${platform}/${version}: invalid SHA256SUMS line`)
     return [match[2], match[1]]
   }))
-  const requiredFiles = platform === "windows-x64" ? [metadata.path, `${metadata.path}.blockmap`] : metadata.files.map((file) => basename(new URL(file.url).pathname))
+  const metadataFiles = metadata.files.map((file) => basename(new URL(file.url).pathname))
+  const requiredFiles = platform === "windows-x64"
+    ? [metadata.path, `${metadata.path}.blockmap`]
+    : metadataFiles.flatMap((fileName) => [fileName, `${fileName}.blockmap`])
   for (const fileName of requiredFiles) {
     assert(checksums.has(fileName), `${platform}/${version}/${fileName}: missing SHA-256 entry`)
     assert(await digest(join(versionRoot, fileName), "sha256", "hex") === checksums.get(fileName), `${platform}/${version}/${fileName}: SHA-256 mismatch`)
