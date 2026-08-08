@@ -1,0 +1,12 @@
+{
+  "name": "owen-updates",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "publish:mdbox:windows": "node tools/publish-mdbox-windows.mjs",
+    "validate": "node tools/validate-update-repo.mjs"
+  },
+  "devDependencies": {
+    "yaml": "^2.9.0"
+  }
+}

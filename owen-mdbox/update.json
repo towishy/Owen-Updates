@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "product": "owen-mdbox",
+  "platforms": {
+    "windows-x64": {
+      "version": "0.3.33",
+      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/main/owen-mdbox/windows-x64/0.3.33"
+    }
+  }
+}
