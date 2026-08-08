@@ -4,7 +4,7 @@
   "platforms": {
     "windows-x64": {
       "version": "0.3.33",
-      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/main/owen-mdbox/windows-x64/0.3.33"
+      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/cec8db03253e3af8ea1284d015d548d1afd7ccff/owen-mdbox/windows-x64/0.3.33"
     }
   }
 }

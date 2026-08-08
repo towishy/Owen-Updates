@@ -39,15 +39,7 @@ for (const fileName of [setupName, blockmapName]) {
 }
 await writeFile(join(versionRoot, "SHA256SUMS.txt"), `${checksumLines.join("\n")}\n`, "utf8")
 
-const manifestPath = join(productRoot, "update.json")
-const manifest = JSON.parse(await readFile(manifestPath, "utf8"))
-manifest.platforms["windows-x64"] = {
-  version: options.version,
-  feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/main/owen-mdbox/windows-x64/${options.version}`,
-}
-await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8")
-
-console.log(`Prepared owen-mdbox/windows-x64/${options.version}.`)
+console.log(`Prepared owen-mdbox/windows-x64/${options.version}; pin update.json after committing these artifacts.`)
 
 async function copyImmutable(source, destination) {
   const sourceHash = await digest(source, "sha256", "hex")
