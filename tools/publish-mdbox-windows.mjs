@@ -36,7 +36,7 @@ const manifestPath = join(productRoot, "update.json")
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"))
 manifest.platforms["windows-x64"] = {
   version: options.version,
-  feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/main/owen-mdbox/windows-x64/${options.version}`,
+  feedUrl: `https://media.githubusercontent.com/media/towishy/Owen-Updates/main/owen-mdbox/windows-x64/${options.version}`,
 }
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8")
 

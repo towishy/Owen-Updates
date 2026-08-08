@@ -31,7 +31,7 @@ async function validateProduct(product) {
     assert(isRecord(update), `${product}/${platform}: update entry must be an object`)
     assert(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(update.version), `${product}/${platform}: invalid version`)
 
-    const expectedFeedUrl = `https://raw.githubusercontent.com/towishy/Owen-Updates/main/${product}/${platform}/${update.version}`
+    const expectedFeedUrl = `https://media.githubusercontent.com/media/towishy/Owen-Updates/main/${product}/${platform}/${update.version}`
     assert(update.feedUrl === expectedFeedUrl, `${product}/${platform}: feedUrl must match its version folder`)
     await validateVersionFeed(productRoot, platform, update.version)
   }
