@@ -1,10 +1,11 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "product": "owen-mdbox",
   "platforms": {
     "windows-x64": {
-      "version": "0.3.43",
-      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/56c08509a7e42583ae4dc4d7ccc99a038238321d/owen-mdbox/windows-x64/0.3.43"
+      "downloadUrl": "https://github.com/towishy/Owen-Updates/releases/download/owen-mdbox-windows-x64-0.3.44/owen-mdbox-0.3.44-windows-x64-setup.zip",
+      "version": "0.3.44",
+      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/bcfce8128ea8035984c6b0029fcefce6c6aaa1b4/owen-mdbox/windows-x64/0.3.44"
     },
     "mac-arm": {
       "version": "0.3.43",
