@@ -7,7 +7,7 @@
 | 플랫폼 | 폴더 | 상태 |
 | --- | --- | --- |
 | Windows x64 | `windows-x64` | 0.3.34 제공 |
-| macOS arm64 | `mac-arm` | 서명·공증 릴리스 게시 대기 |
+| macOS arm64 | `mac-arm` | self-signed 릴리스 게시 대기 |
 
 버전 폴더의 파일은 게시 후 교체하지 않는다. 새 릴리즈는 새 버전 폴더를 만들고 `update.json`의 해당 플랫폼 항목만 갱신한다.
 

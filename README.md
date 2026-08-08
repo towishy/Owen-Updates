@@ -34,4 +34,4 @@ npm run pin:mdbox:mac -- --version <x.y.z> --revision <METADATA_COMMIT>
 npm run validate
 ```
 
-세 단계를 한 커밋으로 합치지 않으며, Developer ID 서명과 Apple 공증을 통과하지 않은 macOS 산출물은 운영 피드에 추가하지 않는다.
+세 단계를 한 커밋으로 합치지 않는다. Owen MDBOX macOS 산출물은 제품 저장소의 `OWEN.pfx` self-signed 인증서 fingerprint 검증을 통과한 뒤 게시하며 Apple Developer ID와 notarization은 사용하지 않는다.
