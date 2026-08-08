@@ -5,6 +5,10 @@
     "windows-x64": {
       "version": "0.3.35",
       "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/6c345ac04be46ff5d6ad51f7ecd987f6ff360455/owen-mdbox/windows-x64/0.3.35"
+    },
+    "mac-arm": {
+      "version": "0.3.35",
+      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/bb9e82621ea6422fc8cf3ca45d992d998f9ac3e4/owen-mdbox/mac-arm/0.3.35"
     }
   }
 }
