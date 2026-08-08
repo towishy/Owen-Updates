@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises"
 import { basename, join, resolve } from "node:path"
-import { parse as parseYaml } from "yaml"
+import { parse as parseYaml, stringify as stringifyYaml } from "yaml"
 
 const options = parseArguments(process.argv.slice(2))
 assert(/^\d+\.\d+\.\d+$/u.test(options.version), "--version must use x.y.z format")
@@ -24,7 +24,14 @@ assert(metadata.files?.some((file) => file.url === setupName), "latest.yml does 
 await mkdir(versionRoot, { recursive: true })
 await copyImmutable(join(sourceRoot, setupName), join(versionRoot, setupName))
 await copyImmutable(join(sourceRoot, blockmapName), join(versionRoot, blockmapName))
-await writeImmutableMetadata(metadataSource, join(versionRoot, metadataName))
+const publishedMetadata = structuredClone(metadata)
+publishedMetadata.files = publishedMetadata.files.map((file) => ({
+  ...file,
+  url: file.url === setupName
+    ? `https://media.githubusercontent.com/media/towishy/Owen-Updates/main/owen-mdbox/windows-x64/${options.version}/${setupName}`
+    : file.url,
+}))
+await writeImmutableMetadata(publishedMetadata, join(versionRoot, metadataName))
 
 const checksumLines = []
 for (const fileName of [setupName, blockmapName]) {
@@ -36,7 +43,7 @@ const manifestPath = join(productRoot, "update.json")
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"))
 manifest.platforms["windows-x64"] = {
   version: options.version,
-  feedUrl: `https://media.githubusercontent.com/media/towishy/Owen-Updates/main/owen-mdbox/windows-x64/${options.version}`,
+  feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/main/owen-mdbox/windows-x64/${options.version}`,
 }
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8")
 
@@ -53,14 +60,13 @@ async function copyImmutable(source, destination) {
   }
 }
 
-async function writeImmutableMetadata(source, destination) {
-  const sourceMetadata = parseYaml(await readFile(source, "utf8"))
+async function writeImmutableMetadata(sourceMetadata, destination) {
   try {
     const destinationMetadata = parseYaml(await readFile(destination, "utf8"))
     assert(JSON.stringify(destinationMetadata) === JSON.stringify(sourceMetadata), `${basename(destination)} already exists with different content`)
   } catch (error) {
     if (error?.code !== "ENOENT") throw error
-    await copyFile(source, destination)
+    await writeFile(destination, stringifyYaml(sourceMetadata), "utf8")
   }
 }
 

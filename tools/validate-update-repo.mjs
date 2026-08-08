@@ -31,13 +31,13 @@ async function validateProduct(product) {
     assert(isRecord(update), `${product}/${platform}: update entry must be an object`)
     assert(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(update.version), `${product}/${platform}: invalid version`)
 
-    const expectedFeedUrl = `https://media.githubusercontent.com/media/towishy/Owen-Updates/main/${product}/${platform}/${update.version}`
+    const expectedFeedUrl = `https://raw.githubusercontent.com/towishy/Owen-Updates/main/${product}/${platform}/${update.version}`
     assert(update.feedUrl === expectedFeedUrl, `${product}/${platform}: feedUrl must match its version folder`)
-    await validateVersionFeed(productRoot, platform, update.version)
+    await validateVersionFeed(product, productRoot, platform, update.version)
   }
 }
 
-async function validateVersionFeed(productRoot, platform, version) {
+async function validateVersionFeed(product, productRoot, platform, version) {
   const versionRoot = join(productRoot, platform, version)
   const metadata = parseYaml(await readFile(join(versionRoot, platformMetadata[platform]), "utf8"))
   assert(isRecord(metadata), `${platform}/${version}: updater metadata must be an object`)
@@ -45,15 +45,19 @@ async function validateVersionFeed(productRoot, platform, version) {
   assert(Array.isArray(metadata.files) && metadata.files.length > 0, `${platform}/${version}: metadata files are required`)
 
   for (const file of metadata.files) {
-    assert(isRecord(file) && file.url === basename(file.url), `${platform}/${version}: invalid update file path`)
-    const filePath = join(versionRoot, file.url)
+    assert(isRecord(file) && typeof file.url === "string", `${platform}/${version}: invalid update file entry`)
+    const fileUrl = new URL(file.url)
+    const fileName = basename(fileUrl.pathname)
+    const expectedFileUrl = `https://media.githubusercontent.com/media/towishy/Owen-Updates/main/${product}/${platform}/${version}/${fileName}`
+    assert(file.url === expectedFileUrl, `${platform}/${version}: invalid update file URL`)
+    const filePath = join(versionRoot, fileName)
     const fileStat = await stat(filePath)
-    assert(fileStat.size === file.size, `${platform}/${version}/${file.url}: size mismatch`)
-    assert(await digest(filePath, "sha512", "base64") === file.sha512, `${platform}/${version}/${file.url}: SHA-512 mismatch`)
+    assert(fileStat.size === file.size, `${platform}/${version}/${fileName}: size mismatch`)
+    assert(await digest(filePath, "sha512", "base64") === file.sha512, `${platform}/${version}/${fileName}: SHA-512 mismatch`)
   }
 
   assert(metadata.path === basename(metadata.path), `${platform}/${version}: invalid primary update path`)
-  const primaryFile = metadata.files.find((file) => file.url === metadata.path)
+  const primaryFile = metadata.files.find((file) => basename(new URL(file.url).pathname) === metadata.path)
   assert(primaryFile?.sha512 === metadata.sha512, `${platform}/${version}: primary SHA-512 mismatch`)
 
   const checksumPath = join(versionRoot, "SHA256SUMS.txt")
@@ -63,7 +67,7 @@ async function validateVersionFeed(productRoot, platform, version) {
     assert(match, `${platform}/${version}: invalid SHA256SUMS line`)
     return [match[2], match[1]]
   }))
-  const requiredFiles = platform === "windows-x64" ? [metadata.path, `${metadata.path}.blockmap`] : metadata.files.map((file) => file.url)
+  const requiredFiles = platform === "windows-x64" ? [metadata.path, `${metadata.path}.blockmap`] : metadata.files.map((file) => basename(new URL(file.url).pathname))
   for (const fileName of requiredFiles) {
     assert(checksums.has(fileName), `${platform}/${version}/${fileName}: missing SHA-256 entry`)
     assert(await digest(join(versionRoot, fileName), "sha256", "hex") === checksums.get(fileName), `${platform}/${version}/${fileName}: SHA-256 mismatch`)
