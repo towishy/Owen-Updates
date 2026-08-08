@@ -87,7 +87,7 @@ Owen-Updates 저장 구조:
 릴리즈 자동화:
 1. 대상 제품의 기존 릴리즈 명령에 중앙 3단계 게시를 연결한다. 버전 일치 확인, 제품 검증, 서명 패키징, packaged smoke, 제품 commit/push/tag/release가 성공한 뒤 중앙 게시를 수행한다.
 2. 중간 실패 후 검증을 처음부터 반복하지 않도록 안전한 resume 지점을 제공한다. 이미 통과한 전체 suite는 한 릴리즈 시도에서 다시 돌리지 않고 실패 테스트와 미검증 단계만 실행한다.
-3. tag/release 이름은 대상 저장소의 기존 정책을 따른다. `v` 접두사를 임의로 추가하지 않는다. 중앙 저장소 tag는 여러 제품의 같은 버전 충돌 가능성이 있으므로 기존 다제품 정책을 확인하며, 업데이트 정확성이 tag에 의존하게 만들지 않는다.
+3. 대상 제품 저장소의 tag/release 이름은 기존 정책을 따르고 `v` 접두사를 임의로 추가하지 않는다. 중앙 저장소는 manifest push 후 `npm run release:sync-platforms`를 실행한다. 중앙 tag는 `<product>-<platform>-<version>`, Release 제목은 숫자 버전이며, 같은 제품·플랫폼의 최신 하나만 보존한다. 다른 플랫폼과 제품의 최신 Release를 삭제하지 않으며 업데이트 정확성이 tag에 의존하게 만들지 않는다.
 4. Windows 서명이나 macOS signing/notarization을 기존 제품 정책대로 유지하고, 서명되지 않은 임시 패키지를 운영 피드에 게시하지 않는다.
 
 필수 테스트:
@@ -106,6 +106,7 @@ Owen-Updates 저장 구조:
 - 모든 metadata와 바이너리 URL은 immutable commit SHA에 고정된다.
 - 제품 저장소와 중앙 저장소의 관련 테스트 및 packaged smoke가 통과한다.
 - 요청받은 경우 두 저장소를 commit/push하고 대상 제품 release를 생성하며, 중앙 피드를 원격에서 다시 검증한다.
+- 중앙 저장소의 각 manifest 플랫폼에 namespaced tag와 최신 GitHub Release가 정확히 하나씩 남아 있다.
 - 최종 보고에는 변경 파일, 테스트 결과, 제품 commit/tag/release, 중앙의 artifact/metadata/manifest commit SHA, 운영 manifest 버전, 원격 다운로드 검증 결과를 포함한다.
 ```
 
