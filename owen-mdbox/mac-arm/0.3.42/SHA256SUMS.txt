@@ -1,0 +1,4 @@
+2240fa7873600169f072327404ee51e9fe90a21d3c811678735d78c86dc163da  owen-mdbox-0.3.42-macos-arm64.zip
+70bff5b2f5bca2dbf76238c314d4a1e71a6af47fd384eb75e07c215b1b771686  owen-mdbox-0.3.42-macos-arm64.zip.blockmap
+30d8b22f66f24a3383f0a90ef09183afa3fdc16af0f8e3da39068ece79f6a0ae  owen-mdbox-0.3.42-macos-arm64.dmg
+0b98765306fefc6b45829a1897b8ae4d095bc8742c5abe43129eb67d39cb5378  owen-mdbox-0.3.42-macos-arm64.dmg.blockmap
