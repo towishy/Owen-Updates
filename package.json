@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "finalize:mdbox:windows": "node tools/finalize-mdbox-windows.mjs",
     "pin:mdbox:windows": "node tools/pin-mdbox-windows.mjs",
     "publish:mdbox:windows": "node tools/publish-mdbox-windows.mjs",
     "validate": "node tools/validate-update-repo.mjs"

@@ -49,8 +49,8 @@ async function validateVersionFeed(product, productRoot, platform, version) {
     assert(isRecord(file) && typeof file.url === "string", `${platform}/${version}: invalid update file entry`)
     const fileUrl = new URL(file.url)
     const fileName = basename(fileUrl.pathname)
-    const expectedFileUrl = `https://media.githubusercontent.com/media/towishy/Owen-Updates/main/${product}/${platform}/${version}/${fileName}`
-    assert(file.url === expectedFileUrl, `${platform}/${version}: invalid update file URL`)
+    const expectedFilePath = new RegExp(`^/media/towishy/Owen-Updates/[a-f0-9]{40}/${product}/${platform}/${version}/${fileName}$`, "u")
+    assert(fileUrl.protocol === "https:" && fileUrl.hostname === "media.githubusercontent.com" && expectedFilePath.test(fileUrl.pathname), `${platform}/${version}: invalid update file URL`)
     const filePath = join(versionRoot, fileName)
     const fileStat = await stat(filePath)
     assert(fileStat.size === file.size, `${platform}/${version}/${fileName}: size mismatch`)

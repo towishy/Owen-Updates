@@ -27,9 +27,7 @@ await copyImmutable(join(sourceRoot, blockmapName), join(versionRoot, blockmapNa
 const publishedMetadata = structuredClone(metadata)
 publishedMetadata.files = publishedMetadata.files.map((file) => ({
   ...file,
-  url: file.url === setupName
-    ? `https://media.githubusercontent.com/media/towishy/Owen-Updates/main/owen-mdbox/windows-x64/${options.version}/${setupName}`
-    : file.url,
+  url: basename(new URL(file.url, "https://placeholder.invalid").pathname),
 }))
 await writeImmutableMetadata(publishedMetadata, join(versionRoot, metadataName))
 
@@ -55,7 +53,11 @@ async function copyImmutable(source, destination) {
 async function writeImmutableMetadata(sourceMetadata, destination) {
   try {
     const destinationMetadata = parseYaml(await readFile(destination, "utf8"))
-    assert(JSON.stringify(destinationMetadata) === JSON.stringify(sourceMetadata), `${basename(destination)} already exists with different content`)
+    const normalize = (metadata) => ({
+      ...metadata,
+      files: metadata.files.map((file) => ({ ...file, url: basename(new URL(file.url, "https://placeholder.invalid").pathname) })),
+    })
+    assert(JSON.stringify(normalize(destinationMetadata)) === JSON.stringify(normalize(sourceMetadata)), `${basename(destination)} already exists with different content`)
   } catch (error) {
     if (error?.code !== "ENOENT") throw error
     await writeFile(destination, stringifyYaml(sourceMetadata), "utf8")
