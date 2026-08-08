@@ -1,6 +1,6 @@
 version: 0.3.40
 files:
-  - url: owen-mdbox-0.3.40-windows-x64-setup.exe
+  - url: https://media.githubusercontent.com/media/towishy/Owen-Updates/2d8e0f31303ba9dd0681e3a84e65f0f1ee0b48ca/owen-mdbox/windows-x64/0.3.40/owen-mdbox-0.3.40-windows-x64-setup.exe
     sha512: eGlxrk8ZcNYAOPmzIywUGWSbep2FqVwYDjfHw4jNhjj5XILWM+kBBVXQ9H2B4xHWX4nYW1y7HiiWG/PG5iV20g==
     size: 179059936
 path: owen-mdbox-0.3.40-windows-x64-setup.exe
