@@ -1,0 +1,8 @@
+version: 0.3.42
+files:
+  - url: owen-mdbox-0.3.42-windows-x64-setup.exe
+    sha512: 6WKIsEkIAvhmDPi8oQmbQvebkt7hJu9PgDmfP7vX73dcshcbwfN0XlgDLIh1dOSY2Z9sz4ndmYHiv6wwJ8ea1g==
+    size: 179060152
+path: owen-mdbox-0.3.42-windows-x64-setup.exe
+sha512: 6WKIsEkIAvhmDPi8oQmbQvebkt7hJu9PgDmfP7vX73dcshcbwfN0XlgDLIh1dOSY2Z9sz4ndmYHiv6wwJ8ea1g==
+releaseDate: 2026-08-08T12:30:16.604Z
