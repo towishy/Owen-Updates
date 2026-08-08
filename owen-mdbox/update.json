@@ -3,8 +3,8 @@
   "product": "owen-mdbox",
   "platforms": {
     "windows-x64": {
-      "version": "0.3.42",
-      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/5ce4930c9eedf0740cb410891ec7889eb2ef1260/owen-mdbox/windows-x64/0.3.42"
+      "version": "0.3.43",
+      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/56c08509a7e42583ae4dc4d7ccc99a038238321d/owen-mdbox/windows-x64/0.3.43"
     },
     "mac-arm": {
       "version": "0.3.42",
