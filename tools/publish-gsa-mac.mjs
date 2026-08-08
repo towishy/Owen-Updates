@@ -9,7 +9,8 @@ assert(options.source, "--source is required")
 
 const repositoryRoot = resolve(import.meta.dirname, "..")
 const sourceRoot = resolve(options.source)
-const versionRoot = join(repositoryRoot, "gsa-dashboard", "mac-arm", options.version)
+const platformRoot = join(repositoryRoot, "gsa-dashboard", "mac-arm")
+const versionRoot = join(platformRoot, options.version)
 const metadataName = "latest-mac.yml"
 const metadata = parseYaml(await readFile(join(sourceRoot, metadataName), "utf8"))
 assert(String(metadata.version) === options.version, "latest-mac.yml version does not match --version")

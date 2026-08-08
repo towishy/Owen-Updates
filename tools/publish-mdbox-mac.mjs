@@ -10,7 +10,8 @@ assert(options.source, "--source is required")
 const repositoryRoot = resolve(process.env.OWEN_UPDATES_ROOT ?? resolve(import.meta.dirname, ".."))
 const productRoot = join(repositoryRoot, "owen-mdbox")
 const sourceRoot = resolve(options.source)
-const versionRoot = join(productRoot, "mac-arm", options.version)
+const platformRoot = join(productRoot, "mac-arm")
+const versionRoot = join(platformRoot, options.version)
 const metadataName = "latest-mac.yml"
 const metadata = parseYaml(await readFile(join(sourceRoot, metadataName), "utf8"))
 const archiveNames = [

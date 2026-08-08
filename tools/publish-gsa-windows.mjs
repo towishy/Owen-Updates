@@ -8,7 +8,8 @@ assert(options.source, "--source is required")
 
 const repositoryRoot = resolve(import.meta.dirname, "..")
 const sourceRoot = resolve(options.source)
-const versionRoot = join(repositoryRoot, "gsa-dashboard", "windows-x64", options.version)
+const platformRoot = join(repositoryRoot, "gsa-dashboard", "windows-x64")
+const versionRoot = join(platformRoot, options.version)
 const metadataName = "releases.win.json"
 const metadata = JSON.parse(await readFile(join(sourceRoot, metadataName), "utf8"))
 const assets = metadata.Assets

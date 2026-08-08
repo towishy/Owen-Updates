@@ -25,6 +25,17 @@ Owen 제품군의 공개 업데이트 메타데이터와 in-place upgrade 바이
 
 다른 Owen 제품을 연결할 때는 [제품 통합 프롬프트 가이드](PRODUCT-INTEGRATION-PROMPT.md)를 사용한다.
 
+## Priority 1: 제품·플랫폼별 최신 버전 하나 보존
+
+Owen-Updates의 모든 게시 프로세스에서 가장 먼저 지킬 불변 조건이다.
+
+- 각 `<product>/<platform>`에는 `update.json`이 가리키는 버전 디렉터리 하나만 둔다.
+- artifact publish와 metadata finalize 중에는 이전 빌드를 유지한다.
+- 새 버전의 manifest pin이 성공한 직후 같은 제품·플랫폼의 이전 버전 디렉터리만 제거한다.
+- 다른 제품 또는 다른 플랫폼의 최신 버전은 제거하지 않는다.
+- pin과 이전 빌드 정리 후 `npm run validate`로 이 조건을 반드시 검증한다. 중복 버전 디렉터리가 있으면 검증은 실패한다.
+- manifest commit을 push한 뒤 `npm run release:sync-platforms`로 같은 제품·플랫폼의 GitHub Release와 tag도 최신 하나만 남긴다.
+
 ## GitHub Release 보존 정책
 
 중앙 GitHub Release는 운영자가 플랫폼별 현재 피드를 확인하기 위한 표식이며 앱의 업데이트 탐색점은 아니다. `update.json`의 각 플랫폼마다 최신 릴리스와 태그를 정확히 하나만 보유한다.

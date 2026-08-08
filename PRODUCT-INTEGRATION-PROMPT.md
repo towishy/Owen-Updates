@@ -69,18 +69,19 @@ Owen-Updates 저장 구조:
 `{{PRODUCT_ID}}/<platform>/<version>/SHA256SUMS.txt`
 
 중앙 저장소 구현 규칙:
-1. 실행 파일, blockmap, dmg, zip 등 updater가 내려받는 대형 산출물은 Git LFS로 추적한다. `raw.githubusercontent.com`은 LFS 바이너리가 아니라 pointer를 반환하므로 바이너리 URL에 절대 사용하지 않는다.
-2. `latest.yml` 또는 `latest-mac.yml`은 metadata commit의 raw feed에서 제공한다. 그 안의 실제 파일 URL은 다음 immutable LFS media URL이어야 한다.
+1. 최우선 보존 정책으로 각 `{{PRODUCT_ID}}/<platform>`에는 `update.json`이 가리키는 최신 버전 디렉터리 하나만 둔다. artifact publish와 metadata finalize 중에는 이전 빌드를 유지하고, 새 버전의 manifest pin이 성공한 직후 같은 제품·플랫폼의 이전 버전만 제거한다. 다른 제품·플랫폼의 최신 버전은 보존하며 중앙 validator가 이를 반드시 강제해야 한다.
+2. 실행 파일, blockmap, dmg, zip 등 updater가 내려받는 대형 산출물은 Git LFS로 추적한다. `raw.githubusercontent.com`은 LFS 바이너리가 아니라 pointer를 반환하므로 바이너리 URL에 절대 사용하지 않는다.
+3. `latest.yml` 또는 `latest-mac.yml`은 metadata commit의 raw feed에서 제공한다. 그 안의 실제 파일 URL은 다음 immutable LFS media URL이어야 한다.
    `https://media.githubusercontent.com/media/towishy/Owen-Updates/<ARTIFACT_COMMIT>/{{PRODUCT_ID}}/<platform>/<version>/<file>`
-3. `main`을 포함한 mutable branch를 finalized feedUrl이나 바이너리 URL에 넣지 않는다.
-4. 기존 `owen-mdbox` publish/finalize/pin 스크립트와 validator를 가장 가까운 기준으로 삼아 {{PRODUCT_ID}}용 최소 확장을 추가한다. 제품별 차이가 작다면 기존 패턴을 유지하고, 실제 중복이 커질 때만 공용화를 한다.
-5. 중앙 validator의 제품 목록에 {{PRODUCT_ID}}를 등록하고 schema, 플랫폼, immutable URL, 파일 크기, metadata SHA-512, SHA256SUMS, 필수 blockmap/archive를 검증한다.
-6. 이미 존재하는 버전 폴더의 서로 다른 바이너리나 metadata를 덮어쓰지 않는다. 같은 내용의 재실행만 idempotent하게 허용한다.
+4. `main`을 포함한 mutable branch를 finalized feedUrl이나 바이너리 URL에 넣지 않는다.
+5. 기존 `owen-mdbox` publish/finalize/pin 스크립트와 validator를 가장 가까운 기준으로 삼아 {{PRODUCT_ID}}용 최소 확장을 추가한다. 제품별 차이가 작다면 기존 패턴을 유지하고, 실제 중복이 커질 때만 공용화를 한다.
+6. 중앙 validator의 제품 목록에 {{PRODUCT_ID}}를 등록하고 보존 정책, schema, 플랫폼, immutable URL, 파일 크기, metadata SHA-512, SHA256SUMS, 필수 blockmap/archive를 검증한다.
+7. 이미 존재하는 버전 폴더의 서로 다른 바이너리나 metadata를 덮어쓰지 않는다. 같은 내용의 재실행만 idempotent하게 허용한다.
 
 반드시 지킬 3단계 게시 순서:
 1. 제품 빌드에서 생성한 installer/archive와 blockmap, 초기 metadata, SHA256SUMS를 새 버전 폴더에 준비한다. LFS 객체가 추적되는지 확인하고 artifact commit을 만든 뒤 push한다. 전체 40자리 `ARTIFACT_COMMIT`을 기록한다.
 2. metadata의 파일 URL을 `ARTIFACT_COMMIT` 기반 immutable media URL로 finalize한다. metadata commit을 만들고 push한 뒤 전체 40자리 `METADATA_COMMIT`을 기록한다.
-3. `update.json`의 해당 플랫폼 version과 feedUrl을 `METADATA_COMMIT` 기반 raw URL로 pin한다. 중앙 validator를 통과시킨 후 manifest commit을 만들고 push한다.
+3. `update.json`의 해당 플랫폼 version과 feedUrl을 `METADATA_COMMIT` 기반 raw URL로 pin한다. pin 성공 후 같은 제품·플랫폼의 이전 빌드만 제거하고, 중앙 validator를 통과시킨 후 manifest commit을 만들고 push한다.
 
 이 순서를 한 commit으로 합치지 않는다. metadata가 자기 자신의 commit을 참조할 수 없고, 바이너리와 metadata의 불변 revision 역할이 다르기 때문이다. 앱의 업데이트 동작은 Owen-Updates GitHub Release나 tag에 의존하지 않고 위 commit SHA 체인만 신뢰해야 한다.
 
@@ -104,6 +105,7 @@ Owen-Updates 저장 구조:
 - 대상 제품은 인증 없이 Owen-Updates manifest를 통해 최신 버전을 확인한다.
 - 사용자가 앱 안에서 다운로드하고 in-place upgrade를 시작할 수 있다.
 - 모든 metadata와 바이너리 URL은 immutable commit SHA에 고정된다.
+- 중앙 저장소에는 제품·플랫폼별로 manifest가 가리키는 최신 버전 디렉터리 하나만 남아 있다.
 - 제품 저장소와 중앙 저장소의 관련 테스트 및 packaged smoke가 통과한다.
 - 요청받은 경우 두 저장소를 commit/push하고 대상 제품 release를 생성하며, 중앙 피드를 원격에서 다시 검증한다.
 - 중앙 저장소의 각 manifest 플랫폼에 namespaced tag와 최신 GitHub Release가 정확히 하나씩 남아 있다.

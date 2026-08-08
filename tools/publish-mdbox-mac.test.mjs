@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import { spawnSync } from "node:child_process"
 import { createHash } from "node:crypto"
-import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises"
+import { access, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 import test from "node:test"
@@ -13,6 +13,8 @@ test("publishes, finalizes, pins, and validates a macOS updater feed", async () 
   const repository = join(root, "repository")
   const version = "1.2.3"
   await mkdir(source, { recursive: true })
+  await mkdir(join(repository, "owen-mdbox", "mac-arm", "1.2.2"), { recursive: true })
+  await mkdir(join(repository, "owen-mdbox", "windows-x64", "9.8.7"), { recursive: true })
   const archiveNames = [
     `owen-mdbox-${version}-macos-arm64.zip`,
     `owen-mdbox-${version}-macos-arm64.dmg`,
@@ -40,6 +42,8 @@ test("publishes, finalizes, pins, and validates a macOS updater feed", async () 
   assert.equal(result.status, 0, result.stderr)
 
   const versionRoot = join(repository, "owen-mdbox", "mac-arm", version)
+  await access(join(repository, "owen-mdbox", "mac-arm", "1.2.2"))
+  await access(join(repository, "owen-mdbox", "windows-x64", "9.8.7"))
   const metadata = parseYaml(await readFile(join(versionRoot, "latest-mac.yml"), "utf8"))
   assert.deepEqual(metadata.files.map((file) => file.url), archiveNames)
   const checksums = await readFile(join(versionRoot, "SHA256SUMS.txt"), "utf8")
@@ -50,6 +54,7 @@ test("publishes, finalizes, pins, and validates a macOS updater feed", async () 
   const artifactRevision = "a".repeat(40)
   const finalizeResult = runTool("finalize-mdbox-mac.mjs", ["--version", version, "--revision", artifactRevision], repository)
   assert.equal(finalizeResult.status, 0, finalizeResult.stderr)
+  await access(join(repository, "owen-mdbox", "mac-arm", "1.2.2"))
   const finalizedMetadata = parseYaml(await readFile(join(versionRoot, "latest-mac.yml"), "utf8"))
   for (const file of finalizedMetadata.files) {
     assert.match(file.url, new RegExp(`^https://media\\.githubusercontent\\.com/media/towishy/Owen-Updates/${artifactRevision}/owen-mdbox/mac-arm/${version}/`, "u"))
@@ -57,8 +62,16 @@ test("publishes, finalizes, pins, and validates a macOS updater feed", async () 
 
   await writeFile(join(repository, "owen-mdbox", "update.json"), `${JSON.stringify({ platforms: {}, product: "owen-mdbox", schemaVersion: 1 }, null, 2)}\n`)
   const metadataRevision = "b".repeat(40)
+  const missingVersionResult = runTool("pin-mdbox-mac.mjs", ["--version", "1.2.4", "--revision", metadataRevision], repository)
+  assert.notEqual(missingVersionResult.status, 0)
+  assert.match(missingVersionResult.stderr, /cannot retain missing version directory/u)
+  assert.deepEqual(JSON.parse(await readFile(join(repository, "owen-mdbox", "update.json"), "utf8")).platforms, {})
+  await access(join(repository, "owen-mdbox", "mac-arm", "1.2.2"))
+
   const pinResult = runTool("pin-mdbox-mac.mjs", ["--version", version, "--revision", metadataRevision], repository)
   assert.equal(pinResult.status, 0, pinResult.stderr)
+  await assert.rejects(access(join(repository, "owen-mdbox", "mac-arm", "1.2.2")))
+  await access(join(repository, "owen-mdbox", "windows-x64", "9.8.7"))
   const manifest = JSON.parse(await readFile(join(repository, "owen-mdbox", "update.json"), "utf8"))
   assert.deepEqual(manifest.platforms["mac-arm"], {
     feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/${metadataRevision}/owen-mdbox/mac-arm/${version}`,
@@ -67,6 +80,11 @@ test("publishes, finalizes, pins, and validates a macOS updater feed", async () 
 
   const validationResult = runTool("validate-update-repo.mjs", [], repository)
   assert.equal(validationResult.status, 0, validationResult.stderr)
+
+  await mkdir(join(repository, "owen-mdbox", "mac-arm", "1.2.2"))
+  const duplicateVersionResult = runTool("validate-update-repo.mjs", [], repository)
+  assert.notEqual(duplicateVersionResult.status, 0)
+  assert.match(duplicateVersionResult.stderr, /retain exactly one version directory/u)
 })
 
 function runTool(fileName, argumentsList, repository) {

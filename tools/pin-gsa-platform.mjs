@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, resolve } from "node:path"
+import { assertVersionExists, retainOnlyVersion } from "./release-retention.mjs"
 
 const options = parseArguments(process.argv.slice(2))
 assert(/^\d+\.\d+\.\d+$/u.test(options.version), "--version must use x.y.z format")
@@ -7,7 +8,9 @@ assert(/^[a-f0-9]{40}$/u.test(options.revision), "--revision must be a full lowe
 assert(["windows-x64", "mac-arm"].includes(options.platform), "--platform must be windows-x64 or mac-arm")
 
 const repositoryRoot = resolve(import.meta.dirname, "..")
+const platformRoot = resolve(repositoryRoot, "gsa-dashboard", options.platform)
 const manifestPath = resolve(repositoryRoot, "gsa-dashboard", "update.json")
+await assertVersionExists(platformRoot, options.version)
 await mkdir(dirname(manifestPath), { recursive: true })
 let manifest = { schemaVersion: 1, product: "gsa-dashboard", platforms: {} }
 try {
@@ -21,8 +24,9 @@ manifest.platforms[options.platform] = {
   feedUrl: `https://raw.githubusercontent.com/towishy/Owen-Updates/${options.revision}/gsa-dashboard/${options.platform}/${options.version}`,
 }
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8")
+await retainOnlyVersion(platformRoot, options.version)
 
-console.log(`Pinned gsa-dashboard/${options.platform}/${options.version} to ${options.revision}.`)
+console.log(`Pinned gsa-dashboard/${options.platform}/${options.version} to ${options.revision}; removed previous builds.`)
 
 function parseArguments(argumentsList) {
   const parsed = {}

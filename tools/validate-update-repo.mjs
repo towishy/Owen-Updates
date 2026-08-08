@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto"
-import { readFile, stat } from "node:fs/promises"
+import { readdir, readFile, stat } from "node:fs/promises"
 import { basename, dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { parse as parseYaml } from "yaml"
@@ -51,8 +51,15 @@ async function validateProduct(product, config) {
     const feedUrl = new URL(update.feedUrl)
     const expectedPath = new RegExp(`^/towishy/Owen-Updates/[a-f0-9]{40}/${product}/${platform}/${update.version}$`, "u")
     assert(feedUrl.protocol === "https:" && feedUrl.hostname === "raw.githubusercontent.com" && expectedPath.test(feedUrl.pathname), `${product}/${platform}: feedUrl must pin a commit containing its version folder`)
+    await validatePlatformRetention(productRoot, product, platform, update.version)
     await validateVersionFeed(product, productRoot, platform, update.version, config.platforms[platform])
   }
+}
+
+async function validatePlatformRetention(productRoot, product, platform, version) {
+  const entries = await readdir(join(productRoot, platform), { withFileTypes: true })
+  const versionDirectories = entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort()
+  assert(versionDirectories.length === 1 && versionDirectories[0] === version, `${product}/${platform}: retain exactly one version directory matching update.json (${version})`)
 }
 
 async function validateVersionFeed(product, productRoot, platform, version, config) {

@@ -6,9 +6,9 @@
 
 | 플랫폼 | 폴더 | 상태 |
 | --- | --- | --- |
-| Windows x64 | `windows-x64` | 0.3.34 제공 |
-| macOS arm64 | `mac-arm` | self-signed 릴리스 게시 대기 |
+| Windows x64 | `windows-x64` | 0.3.40 제공 |
+| macOS arm64 | `mac-arm` | 0.3.39 제공 |
 
-버전 폴더의 파일은 게시 후 교체하지 않는다. 새 릴리즈는 새 버전 폴더를 만들고 `update.json`의 해당 플랫폼 항목만 갱신한다.
+버전 폴더의 파일은 게시 후 교체하지 않는다. 새 릴리즈의 artifact publish와 metadata finalize 중에는 이전 빌드를 유지한다. 새 버전으로 `update.json` pin이 성공한 직후 같은 플랫폼의 이전 버전 폴더를 제거해 제품·플랫폼별 최신 버전 하나만 유지한다.
 
 macOS 게시 자동화는 DMG와 ZIP, 각각의 blockmap을 Git LFS artifact commit에 저장하고, `latest-mac.yml`을 별도 metadata commit에서 immutable media URL로 finalize한 다음 `update.json.platforms.mac-arm`을 세 번째 manifest commit으로 pin한다.
