@@ -4,23 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "finalize:gsa:mac": "node tools/finalize-gsa-mac.mjs",
-    "finalize:gsa:windows": "node tools/finalize-gsa-windows.mjs",
-    "finalize:mdbox:mac": "node tools/finalize-mdbox-mac.mjs",
-    "finalize:mdbox:windows": "node tools/finalize-mdbox-windows.mjs",
-    "pin:gsa": "node tools/pin-gsa-platform.mjs",
-    "pin:mdbox:mac": "node tools/pin-mdbox-mac.mjs",
-    "pin:mdbox:windows": "node tools/pin-mdbox-windows.mjs",
-    "publish:gsa:mac": "node tools/publish-gsa-mac.mjs",
-    "publish:gsa:windows": "node tools/publish-gsa-windows.mjs",
-    "publish:mdbox:mac": "node tools/publish-mdbox-mac.mjs",
-    "publish:mdbox:windows": "node tools/publish-mdbox-windows.mjs",
-    "release:prepare-downloads": "node tools/sync-platform-releases.mjs --prepare-downloads",
     "release:sync-platforms": "node tools/sync-platform-releases.mjs",
     "test": "node --test tools/*.test.mjs",
     "validate": "node tools/validate-update-repo.mjs"
-  },
-  "devDependencies": {
-    "yaml": "^2.9.0"
   }
 }

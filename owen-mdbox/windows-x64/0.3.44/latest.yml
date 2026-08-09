@@ -1,8 +1,0 @@
-version: 0.3.44
-files:
-  - url: https://media.githubusercontent.com/media/towishy/Owen-Updates/e58534d7d10ce2235e823d681be98d122f8a409a/owen-mdbox/windows-x64/0.3.44/owen-mdbox-0.3.44-windows-x64-setup.exe
-    sha512: B7JNHAMwuQ+phwDdSEOtm3uOmGHMXFwV7yGDTlwV7tLiUi67pxK3qPCKN+rRSzv1/2kPJpb3TRg+g1ygmsVIQQ==
-    size: 179059272
-path: owen-mdbox-0.3.44-windows-x64-setup.exe
-sha512: B7JNHAMwuQ+phwDdSEOtm3uOmGHMXFwV7yGDTlwV7tLiUi67pxK3qPCKN+rRSzv1/2kPJpb3TRg+g1ygmsVIQQ==
-releaseDate: 2026-08-08T22:33:25.242Z

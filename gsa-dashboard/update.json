@@ -1,10 +1,10 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "product": "gsa-dashboard",
   "platforms": {
     "windows-x64": {
-      "version": "0.24.74",
-      "feedUrl": "https://raw.githubusercontent.com/towishy/Owen-Updates/6dcb6b3a2cdbb6db48b547897ee239d60ab7c617/gsa-dashboard/windows-x64/0.24.74"
+      "mode": "check-only",
+      "version": "0.24.74"
     }
   }
 }

@@ -1,3 +1,3 @@
 # macOS arm64
 
-Apple Silicon용 DMG, ZIP, `latest-mac.yml`, blockmap은 macOS arm64 호스트에서 서명된 릴리즈를 만든 뒤 버전 폴더에 게시한다. 제공 전에는 `owen-mdbox/update.json`에 이 플랫폼을 등록하지 않는다.
+Apple Silicon용 최신 버전은 `owen-mdbox/update.json`에서 확인한다. 설치 파일과 자동 업데이트 feed는 외부 배포 경로에서 제공한다.
