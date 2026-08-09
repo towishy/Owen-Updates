@@ -37,7 +37,7 @@ async function validateProduct(product, supportedPlatforms) {
     assert(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u.test(update.version), `${product}/${platform}: invalid version`)
     assert(Object.keys(update).sort().join(",") === "mode,version", `${product}/${platform}: check-only entries may contain only mode and version`)
   }
-  const allowedFiles = new Set(["PRIVACY.md", "README.md", "update.json", ...supportedPlatforms.map((platform) => `${platform}/README.md`)])
+  const allowedFiles = new Set(["PRIVACY.md", "README.md", "THIRD-PARTY-NOTICES.md", "update.json", ...supportedPlatforms.map((platform) => `${platform}/README.md`)])
   for (const filePath of await listFiles(productRoot)) {
     const relativePath = relative(productRoot, filePath).split(sep).join("/")
     assert(allowedFiles.has(relativePath), `${product}: binary or feed artifact is not allowed in check-only mode (${relativePath})`)
