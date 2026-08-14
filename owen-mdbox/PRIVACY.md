@@ -1,10 +1,10 @@
-# OWEN MDBOX 개인정보처리방침
+# MDBOX 개인정보처리방침
 
-- 시행일: 2026년 8월 9일
+- 시행일: 2026년 8월 14일
 - 게시자: Owen Lee
 - 문의: [owen@sarang.day](mailto:owen@sarang.day)
 
-OWEN MDBOX는 사용자가 선택한 Markdown 폴더를 기기 안에서 열고 편집하는 local-first 데스크톱 앱입니다. 게시자는 앱을 통해 사용자의 문서 내용이나 사용 행태를 수집하지 않습니다.
+MDBOX는 사용자가 선택한 Markdown 폴더를 기기 안에서 열고 편집하는 local-first 데스크톱 앱입니다. 게시자는 앱을 통해 사용자의 문서 내용이나 사용 행태를 수집하지 않습니다.
 
 ## 1. 처리하는 데이터
 
@@ -33,7 +33,8 @@ OWEN MDBOX는 사용자가 선택한 Markdown 폴더를 기기 안에서 열고 
 ## 3. 네트워크 연결과 제3자 서비스
 
 - Microsoft Store 설치본의 설치, 라이선스와 업데이트는 Microsoft Store가 관리합니다. 이 과정에서 Microsoft가 처리하는 정보에는 [Microsoft 개인정보처리방침](https://privacy.microsoft.com/privacystatement)이 적용됩니다.
-- Microsoft Store가 아닌 일반 배포본은 자동 업데이트 확인이 켜져 있을 때 공개 GitHub 저장소의 버전 manifest를 조회합니다. 이 요청에는 일반적인 인터넷 연결 정보(IP 주소, 요청 시각과 User-Agent 등)가 GitHub에 전달될 수 있으며 [GitHub Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement)가 적용됩니다.
+- Mac App Store 설치본의 설치, 라이선스와 업데이트는 Apple이 관리합니다. 이 과정에서 Apple이 처리하는 정보에는 [Apple 개인정보 처리방침](https://www.apple.com/legal/privacy/)이 적용됩니다.
+- Store가 아닌 일반 배포본은 자동 업데이트 확인이 켜져 있을 때 공개 GitHub 저장소의 버전 manifest를 조회합니다. 이 요청에는 일반적인 인터넷 연결 정보(IP 주소, 요청 시각과 User-Agent 등)가 GitHub에 전달될 수 있으며 [GitHub Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement)가 적용됩니다.
 - 사용자가 앱에서 외부 링크를 선택하면 운영체제의 기본 브라우저가 해당 웹사이트를 엽니다. 이후의 데이터 처리는 해당 사이트의 정책을 따릅니다.
 
 앱은 사용자의 Markdown 문서, 첨부 파일, OCR 결과 또는 검색 색인을 위 서비스로 전송하지 않습니다.
@@ -58,21 +59,21 @@ OWEN MDBOX는 사용자가 선택한 Markdown 폴더를 기기 안에서 열고 
 
 ## 7. 방침 변경
 
-앱의 데이터 처리 방식이 바뀌면 이 문서의 시행일과 내용을 갱신합니다. 중요한 변경은 Microsoft Store 설명, 릴리스 노트 또는 앱 안의 적절한 위치를 통해 알립니다.
+앱의 데이터 처리 방식이 바뀌면 이 문서의 시행일과 내용을 갱신합니다. 중요한 변경은 Store 설명, 릴리스 노트 또는 앱 안의 적절한 위치를 통해 알립니다.
 
 ## 8. 문의
 
-이 방침 또는 OWEN MDBOX의 데이터 처리에 관한 문의는 [owen@sarang.day](mailto:owen@sarang.day)로 보내 주세요.
+이 방침 또는 MDBOX의 데이터 처리에 관한 문의는 [owen@sarang.day](mailto:owen@sarang.day)로 보내 주세요.
 
 ---
 
-## OWEN MDBOX Privacy Policy
+## MDBOX Privacy Policy
 
-- Effective date: August 9, 2026
+- Effective date: August 14, 2026
 - Publisher: Owen Lee
 - Contact: [owen@sarang.day](mailto:owen@sarang.day)
 
-OWEN MDBOX is a local-first desktop application that opens and edits a Markdown folder selected by the user. The publisher does not collect document contents or usage behavior through the application.
+MDBOX is a local-first desktop application that opens and edits a Markdown folder selected by the user. The publisher does not collect document contents or usage behavior through the application.
 
 ## 1. Data processed on the device
 
@@ -101,7 +102,8 @@ The application does not require an account and does not include publisher-opera
 ## 3. Network connections and third-party services
 
 - Microsoft Store manages installation, licensing, and updates for the Microsoft Store build. Information processed by Microsoft for these operations is governed by the [Microsoft Privacy Statement](https://privacy.microsoft.com/privacystatement).
-- A build distributed outside Microsoft Store checks a public GitHub version manifest when automatic update checks are enabled. GitHub may receive standard connection information such as the IP address, request time, and User-Agent. This processing is governed by the [GitHub Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement).
+- Apple manages installation, licensing, and updates for the Mac App Store build. Information processed by Apple for these operations is governed by the [Apple Privacy Policy](https://www.apple.com/legal/privacy/).
+- A build distributed outside an app store checks a public GitHub version manifest when automatic update checks are enabled. GitHub may receive standard connection information such as the IP address, request time, and User-Agent. This processing is governed by the [GitHub Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement).
 - When the user selects an external link, the operating system opens that website in the default browser. Further processing is governed by the destination website's policy.
 
 The application does not transmit Markdown documents, attachments, OCR results, or search indexes to these services.
@@ -126,8 +128,8 @@ The application does not operate accounts or knowingly collect personal informat
 
 ## 7. Changes to this policy
 
-If the application's data practices change, the effective date and this policy will be updated. Material changes will be communicated through the Microsoft Store listing, release notes, or an appropriate location in the application.
+If the application's data practices change, the effective date and this policy will be updated. Material changes will be communicated through the relevant store listing, release notes, or an appropriate location in the application.
 
 ## 8. Contact
 
-Questions about this policy or data handling in OWEN MDBOX may be sent to [owen@sarang.day](mailto:owen@sarang.day).
+Questions about this policy or data handling in MDBOX may be sent to [owen@sarang.day](mailto:owen@sarang.day).
