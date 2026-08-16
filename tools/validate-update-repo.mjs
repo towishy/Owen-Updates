@@ -1,4 +1,4 @@
-import { readdir, readFile } from "node:fs/promises"
+import { open, readdir, readFile } from "node:fs/promises"
 import { dirname, join, relative, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -7,6 +7,7 @@ const products = {
   "gsa-dashboard": ["windows-x64"],
   "owen-mdbox": ["mac-arm", "windows-x64"],
 }
+const externalZipPattern = /^external\/[a-z0-9][a-z0-9-]*\/[A-Za-z0-9][A-Za-z0-9._-]*\.zip$/u
 
 let validatedProducts = 0
 for (const [product, platforms] of Object.entries(products)) {
@@ -40,7 +41,23 @@ async function validateProduct(product, supportedPlatforms) {
   const allowedFiles = new Set(["PRIVACY.md", "README.md", "THIRD-PARTY-NOTICES.md", "update.json", ...supportedPlatforms.map((platform) => `${platform}/README.md`)])
   for (const filePath of await listFiles(productRoot)) {
     const relativePath = relative(productRoot, filePath).split(sep).join("/")
-    assert(allowedFiles.has(relativePath), `${product}: binary or feed artifact is not allowed in check-only mode (${relativePath})`)
+    if (allowedFiles.has(relativePath)) continue
+    assert(externalZipPattern.test(relativePath), `${product}: binary or feed artifact is not allowed in check-only mode (${relativePath})`)
+    assert(await hasZipSignature(filePath), `${product}: external artifact is not a valid ZIP archive (${relativePath})`)
+  }
+}
+
+async function hasZipSignature(filePath) {
+  const file = await open(filePath, "r")
+  try {
+    const signature = Buffer.alloc(4)
+    const { bytesRead } = await file.read(signature, 0, signature.length, 0)
+    if (bytesRead !== signature.length || signature[0] !== 0x50 || signature[1] !== 0x4b) return false
+    return (signature[2] === 0x03 && signature[3] === 0x04)
+      || (signature[2] === 0x05 && signature[3] === 0x06)
+      || (signature[2] === 0x07 && signature[3] === 0x08)
+  } finally {
+    await file.close()
   }
 }
 
