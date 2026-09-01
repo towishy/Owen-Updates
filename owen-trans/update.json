@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 3,
+  "product": "owen-trans",
+  "platforms": {
+    "windows-x64": {
+      "mode": "check-only",
+      "version": "0.6.0"
+    },
+    "mac-arm": {
+      "mode": "check-only",
+      "version": "0.7.0"
+    }
+  }
+}

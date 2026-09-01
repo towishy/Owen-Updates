@@ -6,6 +6,7 @@ const repositoryRoot = resolve(process.env.OWEN_UPDATES_ROOT ?? resolve(dirname(
 const products = {
   "gsa-dashboard": ["windows-x64"],
   "owen-mdbox": ["mac-arm", "windows-x64"],
+  "owen-trans": ["mac-arm", "windows-x64"],
 }
 const externalZipPattern = /^external\/[a-z0-9][a-z0-9-]*\/[A-Za-z0-9][A-Za-z0-9._-]*\.zip$/u
 
