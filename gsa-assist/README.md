@@ -6,7 +6,7 @@
 
 | 플랫폼 | 최신 버전 | 배포 위치 |
 | --- | --- | --- |
-| Windows x64 | 0.1.28 | 비공개 제품 GitHub Release |
+| Windows x64 | 0.1.29 | 비공개 제품 GitHub Release |
 | Apple Silicon macOS | 0.1.27 | 비공개 제품 GitHub Release |
 
 GSA Assist는 이 manifest에서 버전 정보만 읽는다. 다운로드와 설치는 자동으로
