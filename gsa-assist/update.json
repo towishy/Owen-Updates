@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 3,
+  "product": "gsa-assist",
+  "platforms": {
+    "mac-arm": {
+      "mode": "check-only",
+      "version": "0.1.27"
+    },
+    "windows-x64": {
+      "mode": "check-only",
+      "version": "0.1.28"
+    }
+  }
+}

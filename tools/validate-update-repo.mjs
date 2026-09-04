@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url"
 
 const repositoryRoot = resolve(process.env.OWEN_UPDATES_ROOT ?? resolve(dirname(fileURLToPath(import.meta.url)), ".."))
 const products = {
+  "gsa-assist": ["mac-arm", "windows-x64"],
   "gsa-dashboard": ["windows-x64"],
   "owen-mdbox": ["mac-arm", "windows-x64"],
   "owen-trans": ["mac-arm", "windows-x64"],

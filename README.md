@@ -21,7 +21,7 @@ Owen 제품군의 공개 최신 버전 확인 메타데이터를 제공한다. �
 - installer, app package, blockmap, checksum, updater feed URL은 저장하지 않는다.
 - 설치 파일은 Microsoft Store 또는 제품별 외부 배포 경로에서 제공한다.
 
-현재 등록 제품: `gsa-dashboard`, [owen-mdbox](owen-mdbox/README.md), [owen-trans](owen-trans/README.md)
+현재 등록 제품: `gsa-dashboard`, [gsa-assist](gsa-assist/README.md), [owen-mdbox](owen-mdbox/README.md), [owen-trans](owen-trans/README.md)
 
 다른 Owen 제품을 연결할 때는 [제품 통합 프롬프트 가이드](PRODUCT-INTEGRATION-PROMPT.md)를 사용한다.
 
