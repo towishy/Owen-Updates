@@ -22,7 +22,27 @@ for (const [product, platforms] of Object.entries(products)) {
   }
 }
 
-console.log(`Validated ${validatedProducts} check-only update manifest(s).`)
+let validatedPageProducts = 0
+for (const product of ["owen-caption", "owen-player"]) {
+  let entries
+  try {
+    entries = await readdir(join(repositoryRoot, product), { withFileTypes: true })
+  } catch (error) {
+    if (error?.code === "ENOENT") continue
+    throw error
+  }
+  const allowedPages = new Set(["README.md", "PRIVACY.md"])
+  assert(entries.length === allowedPages.size, `${product}: expected support and privacy pages only`)
+  for (const entry of entries) {
+    assert(entry.isFile() && allowedPages.has(entry.name), `${product}: public pages only, no binary, directory or symlink (${entry.name})`)
+    const bytes = await readFile(join(repositoryRoot, product, entry.name))
+    const content = new TextDecoder("utf-8", { fatal: true }).decode(bytes)
+    assert(content.startsWith("# ") && !content.includes("\0"), `${product}/${entry.name}: expected UTF-8 Markdown`)
+  }
+  validatedPageProducts += 1
+}
+
+console.log(`Validated ${validatedProducts} check-only update manifest(s) and ${validatedPageProducts} page-only product folder(s).`)
 
 async function validateProduct(product, supportedPlatforms) {
   const productRoot = join(repositoryRoot, product)
