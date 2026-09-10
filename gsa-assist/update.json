@@ -4,11 +4,11 @@
   "platforms": {
     "mac-arm": {
       "mode": "check-only",
-      "version": "0.1.31"
+      "version": "0.1.32"
     },
     "windows-x64": {
       "mode": "check-only",
-      "version": "0.1.31"
+      "version": "0.1.32"
     }
   }
 }
